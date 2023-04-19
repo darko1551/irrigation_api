@@ -10,24 +10,34 @@ namespace irregation_api
 {
     public class ValveClient
     {
-        const string identityUrl = "https://id.mobilisis.com";
-        const string clientId = "darko-debeljak-api";
-        const string clientSecret = "cG3Y09xILbOsJ4atzdF2mP7a5Ins66iM";
-        const string credentialsScope = "openid profile email roles web-origins";
-        const string tokenEndpoint = "https://id.mobilisis.com/auth/realms/mobilisis.global/protocol/openid-connect/token";
+        private readonly IConfiguration _configuration;
 
-
-        const string username = "ddebeljak@mobilisis.hr";
-        const string password = "Darko123";
+        string identityUrl;
+        string clientId;
+        string clientSecret;
+        string credentialsScope;
+        string tokenEndpoint;
+        string baseAdress;
+        string username;
+        string password;
 
         private readonly HttpClient _httpClient;
 
         
 
-        public ValveClient( HttpClient httpClient)
+        public ValveClient( HttpClient httpClient, IConfiguration configuration)
         {
+            _configuration = configuration;
+            identityUrl = _configuration.GetValue<string>("Authentication:identityUrl");
+            clientId = _configuration.GetValue<string>("Authentication:clientId");
+            clientSecret = _configuration.GetValue<string>("Authentication:clientSecret");
+            credentialsScope = _configuration.GetValue<string>("Authentication:credentialsScope");
+            tokenEndpoint = _configuration.GetValue<string>("Authentication:tokenEndpoint");
+            baseAdress = _configuration.GetValue<string>("Authentication:baseAdress");
+            username = _configuration.GetValue<string>("Authentication:username");
+            password = _configuration.GetValue<string>("Authentication:password");
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://ingress.mobilisis.com/platform/management/v1.0/");
+            _httpClient.BaseAddress = new Uri(baseAdress);
         }
 
 
@@ -48,42 +58,7 @@ namespace irregation_api
             return tokenResponse;
         }
 
-
-        /*private async Task RefreshAccessToken()
-        {
-
-            _httpClient.BaseAddress = new Uri(identityUrl);
-            TokenResponse tokenResponse = await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
-                {
-                GrantType = "refresh_token", 
-                ClientId = clientId, 
-                ClientSecret = clientSecret, 
-                RefreshToken = ClientCredentials.token!.RefreshToken
-            });
-            ClientCredentials.token = tokenResponse;
-        }*/
-
-        /*public async Task getOrRefreshToken() {
-            if (ClientCredentials.token == null)
-            {
-                await getAccessToken();
-                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ClientCredentials.token!.AccessToken}");
-            }
-            else if (ClientCredentials.token.ExpiresIn < 30) {
-                await RefreshAccessToken();
-                _httpClient.DefaultRequestHeaders.Remove("Authorization");
-                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ClientCredentials.token!.AccessToken}");
-
-            }
-
-        }*/
-
         public bool openValve(string guid) {
-            /* await getOrRefreshToken();
-             if (ClientCredentials.token!.IsError) {
-                 return false;
-             }*/
-
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ClientCredentials.token!.AccessToken}");
 
@@ -110,11 +85,6 @@ namespace irregation_api
 
         public bool closeValve(string guid)
         {
-            /*await getOrRefreshToken();
-            if (ClientCredentials.token!.IsError) {
-                return false;
-            }*/
-
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ClientCredentials.token!.AccessToken}");
 
@@ -144,10 +114,6 @@ namespace irregation_api
 
         public async Task<String?> getUuid(string mac)
         {
-            /*await getOrRefreshToken();
-            if (ClientCredentials.token!.IsError) {
-                return false;
-            }*/
 
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ClientCredentials.token!.AccessToken}");

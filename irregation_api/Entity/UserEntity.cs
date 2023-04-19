@@ -34,7 +34,7 @@ namespace irregation_api.Entity
         
         public UserResponse asResponseModel()
         {
-            return new UserResponse(this.UserId, this.Name,this.Surname,this.Email,  this.SensorEntitys.Select(e => e.asNoUserResponseModel()).ToList());
+            return new UserResponse(this.UserId, this.Name,this.Surname,this.Email,  this.SensorEntitys != null? this.SensorEntitys.Select(e => e.asNoUserResponseModel()).ToList() :new List<SensorNoUserResponse>());
         }
     }
 }

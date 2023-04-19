@@ -67,32 +67,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        jwtBearerOptions.Audience = "darko-debeljak-client";
    });
 
-/*
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
-    {
-        o.MetadataAddress = $"{builder.Configuration["Authentication:KeycloakAuthentication:AuthorityUri"]}/.well-known/openid-configuration";
-        o.Authority = builder.Configuration["Authentication:KeycloakAuthentication:AuthorityUri"];
-        o.Audience = builder.Configuration["Authentication:KeycloakAuthentication:ClientId"];
-    });
-*/
-/*
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-               .AddJwtBearer(jwtBearerOptions =>
-               {
-                   jwtBearerOptions.Authority = "https://id.mobilisis.com/auth/realms/mobilisis.global";
-                   jwtBearerOptions.Audience = "darko-debeljak-client";
-                   jwtBearerOptions.IncludeErrorDetails = true;
-                   jwtBearerOptions.RequireHttpsMetadata = false;
-                   jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
-                   {
-                       ValidateAudience = true,
-                       ValidAudiences = new[] { "master-realm", "account" },
-                       ValidateIssuer = false,
-                       ValidateLifetime = false
-                   };
-               });
-*/
 
 var app = builder.Build();
 
